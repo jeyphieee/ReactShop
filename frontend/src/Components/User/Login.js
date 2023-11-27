@@ -10,8 +10,26 @@ import {authenticate} from '../../utils/helpers'
 import { getUser } from '../../utils/helpers';
 import { useFormik } from "formik";
 import * as yup from 'yup';
+import { loginUser } from '../../user/userSlice';
+import {useDispatch} from 'react-redux';
+
+const loginSchema = yup.object({
+    email: yup.string().nullable().email("Email should be valid").required("Email is required"),
+    password: yup.string().required("Password is required"),
+  });
 
 const Login = () => {
+    const dispatch = useDispatch();
+    const formik = useFormik({
+        initialValues: {
+          email: '',
+          password: '',
+        },
+        validationSchema: loginSchema,
+        onSubmit: (values) => {
+        dispatch(loginUser(values));
+        },
+      });
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -60,7 +78,7 @@ const Login = () => {
                     <div className="row wrapper">
                         <div className="col-10 col-lg-5">
                             <form className="shadow-lg"
-                                onSubmit={submitHandler}
+                                onSubmit={formik.handleSubmit}
                             >
                                 <h1 className="mb-3">Login</h1>
                                 <div className="form-group">
@@ -69,9 +87,15 @@ const Login = () => {
                                         type="email"
                                         id="email_field"
                                         className="form-control"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        value={formik.values.email}
+                                        onChange={formik.handleChange("email")} 
+                                        onBlur={formik.handleBlur("email")} 
                                     />
+                                    <div className="error">
+                                    {
+                                        formik.touched.email && formik.errors.email
+                                    }
+                                    </div>
                                 </div>
 
                                 <div className="form-group">
@@ -80,9 +104,15 @@ const Login = () => {
                                         type="password"
                                         id="password_field"
                                         className="form-control"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        value={formik.values.password}
+                                            onChange={formik.handleChange("password")} 
+                                            onBlur={formik.handleBlur("password")} 
                                     />
+                                    <div className="error">
+                                    {
+                                        formik.touched.password && formik.errors.password
+                                    }
+                                    </div>
                                 </div>
 
                                 <Link to="/password/forgot" className="float-right mb-4">Forgot Password?</Link>
