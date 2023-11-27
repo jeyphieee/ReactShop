@@ -22,6 +22,9 @@ const categories = [
     'Outdoor',
     'Home'
 ]
+
+
+
 const Home = () => {
     let { keyword } = useParams()
     const [loading, setLoading] = useState(true)
