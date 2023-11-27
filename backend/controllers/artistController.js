@@ -86,3 +86,14 @@ exports.updateArtist = async (req, res) => {
         throw new Error(error);
     }
 };
+
+exports.deleteArtist = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const deleteartist = await artist.findOneAndDelete(id); 
+        res.json(deleteartist);
+    }
+    catch (error) {
+        throw new Error(error);
+    }
+};
