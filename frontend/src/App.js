@@ -31,6 +31,13 @@ import UsersList from "./Components/Admin/UsersList";
 import UpdateUser from "./Components/Admin/UpdateUser";
 import ProtectedRoute from "./Components/Route/ProtectedRoute";
 import ProductReviews from "./Components/Admin/ProductReviews";
+import { Provider } from "react-redux";
+import authSlice from './user/userSlice'
+import { configureStore } from '@reduxjs/toolkit';
+import rootReducer from './user/userSlice';
+const store = configureStore({
+  reducer: rootReducer, 
+});
 function App() {
   const [state, setState] = useState({
     cartItems: localStorage.getItem('cartItems')
@@ -99,7 +106,7 @@ function App() {
 
   return (
     <div className="App">
-
+<Provider store={store}>
       <Router>
         <Header cartItems={state.cartItems} />
         <Routes>
@@ -183,7 +190,7 @@ function App() {
               </ProtectedRoute>} />
 
         </Routes>
-      </Router>
+      </Router></Provider>
       <Footer />
     </div>
   );
