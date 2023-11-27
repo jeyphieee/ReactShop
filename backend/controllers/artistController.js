@@ -60,3 +60,14 @@ exports.getAllArtists = async (req, res) => {
         throw new Error(error);
     }
 };
+
+exports.getsingleArtist = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const findartist = await artist.findById(id);
+        res.json(findartist);
+    }
+    catch (error) {
+        throw new Error(error);
+    }
+};
