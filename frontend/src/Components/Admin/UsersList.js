@@ -37,16 +37,20 @@ const UsersList = () => {
     }
     const deleteUser = async (id) => {
         try {
-            const { data } = await axios.delete(`${process.env.REACT_APP_API}/api/v1/admin/user/${id}`, config)
-            setIsDeleted(data.success)
-            setLoading(false)
-            
+            const { data } = await axios.delete(`${process.env.REACT_APP_API}/api/v1/admin/user/${id}`, config);
+            setIsDeleted(data.success);
+            setLoading(false);
         } catch (error) {
-           setError(error.response.data.message)
-           setError()
-            
+            if (error.response && error.response.data) {
+                setError(error.response.data.message);
+            } else {
+                setError("An unexpected error occurred while deleting the user.");
+            }
+            setLoading(false);
         }
-    }
+    };
+    
+    
 
     useEffect(() => {
         listUsers();

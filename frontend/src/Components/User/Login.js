@@ -125,15 +125,6 @@ const Login = () => {
                                     LOGIN
                                 </button>
 
-                                <button
-                                    id="login_button"
-                                    type="submit"
-                                    className="btn btn-block py-3"
-                                >
-                                    Facebook
-                                </button>
-                                
-
                                 <Link to="/register" className="float-right mt-3">New User?</Link>
                             </form>
                         </div>
