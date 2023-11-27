@@ -23,18 +23,15 @@ const NewProduct = () => {
     const [product, setProduct] = useState({})
 
     const categories = [
-        'Electronics',
-        'Cameras',
-        'Laptops',
         'Accessories',
-        'Headphones',
-        'Food',
-        "Books",
-        'Clothes/Shoes',
-        'Beauty/Health',
-        'Sports',
-        'Outdoor',
-        'Home'
+                'Clothing & Apparel',
+                'Drinkware',
+                'Event Merchandise',
+                'Home Decor',
+                'Phone Case & Tech Accesories',
+                'Prints & Poster',
+                'Toys & Collectibles',
+                'Stationery',
     ]
 
     let navigate = useNavigate()

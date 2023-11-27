@@ -36,7 +36,7 @@ const Header = ({ cartItems }) => {
                 <Link to="/" style={{ textDecoration: 'none' }} >
                     <div className="col-12 col-md-3">
                         <div className="navbar-brand">
-                            <img src="./images/shopit_logo.png" />
+                            <img src="./images/Logo.png" width="100px"  />
                         </div>
                     </div>
                 </Link>

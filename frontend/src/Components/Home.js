@@ -9,18 +9,15 @@ import 'rc-slider/assets/index.css';
 import { useParams } from "react-router-dom"
 
 const categories = [
-    'Electronics',
-    'Cameras',
-    'Laptops',
     'Accessories',
-    'Headphones',
-    'Food',
-    "Books",
-    'Clothes/Shoes',
-    'Beauty/Health',
-    'Sports',
-    'Outdoor',
-    'Home'
+                'Clothing & Apparel',
+                'Drinkware',
+                'Event Merchandise',
+                'Home Decor',
+                'Phone Case & Tech Accesories',
+                'Prints & Poster',
+                'Toys & Collectibles',
+                'Stationery',
 ]
 
 

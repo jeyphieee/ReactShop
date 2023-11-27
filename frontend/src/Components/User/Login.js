@@ -2,34 +2,14 @@ import React, { Fragment, useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 
 import Loader from '../Layout/Loader'
-import Metadata from '../Layout/MetaData'
+import MetaData from '../Layout/MetaData'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import {authenticate} from '../../utils/helpers'
 import { getUser } from '../../utils/helpers';
-import { useFormik } from "formik";
-import * as yup from 'yup';
-import { loginUser } from '../../user/userSlice';
-import {useDispatch} from 'react-redux';
-
-const loginSchema = yup.object({
-    email: yup.string().nullable().email("Email should be valid").required("Email is required"),
-    password: yup.string().required("Password is required"),
-  });
 
 const Login = () => {
-    const dispatch = useDispatch();
-    const formik = useFormik({
-        initialValues: {
-          email: '',
-          password: '',
-        },
-        validationSchema: loginSchema,
-        onSubmit: (values) => {
-        dispatch(loginUser(values));
-        },
-      });
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -73,12 +53,12 @@ const Login = () => {
         <Fragment>
             {loading ? <Loader /> : (
                 <Fragment>
-                    <Metadata title={'Login'} />
+                    <MetaData title={'Login'} />
 
                     <div className="row wrapper">
                         <div className="col-10 col-lg-5">
                             <form className="shadow-lg"
-                                onSubmit={formik.handleSubmit}
+                                onSubmit={submitHandler}
                             >
                                 <h1 className="mb-3">Login</h1>
                                 <div className="form-group">
@@ -87,15 +67,9 @@ const Login = () => {
                                         type="email"
                                         id="email_field"
                                         className="form-control"
-                                        value={formik.values.email}
-                                        onChange={formik.handleChange("email")} 
-                                        onBlur={formik.handleBlur("email")} 
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
                                     />
-                                    <div className="error">
-                                    {
-                                        formik.touched.email && formik.errors.email
-                                    }
-                                    </div>
                                 </div>
 
                                 <div className="form-group">
@@ -104,15 +78,9 @@ const Login = () => {
                                         type="password"
                                         id="password_field"
                                         className="form-control"
-                                        value={formik.values.password}
-                                            onChange={formik.handleChange("password")} 
-                                            onBlur={formik.handleBlur("password")} 
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                     />
-                                    <div className="error">
-                                    {
-                                        formik.touched.password && formik.errors.password
-                                    }
-                                    </div>
                                 </div>
 
                                 <Link to="/password/forgot" className="float-right mb-4">Forgot Password?</Link>

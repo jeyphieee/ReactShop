@@ -241,3 +241,38 @@ exports.updateUser = async (req, res, next) => {
         success: true
     })
 }
+
+exports.payment = async (req, res, next) => {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+        return res.status(404).json({ error: 'User not found with this email' })
+        // return next(new ErrorHandler('User not found with this email', 404));
+    }
+    // Get reset token
+    const message = `Thank you for choosing Collector's Corner for your latest acquisition! We're thrilled to have you join our community of collectors.
+
+    Your purchase details are all set, and your receipt is available for download below:
+        
+    If you have any questions about your purchase or need further assistance, feel free to reach out. We're here to ensure your collecting experience with us is top-notch.
+    
+    Happy collecting!`
+    try {
+        await sendEmail({
+            email: user.email,
+            subject: 'Purchase Confirmation',
+            message
+        })
+
+        res.status(200).json({
+            success: true,
+            message: `Email sent to: ${user.email}`
+        })
+
+    } catch (error) {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        await user.save({ validateBeforeSave: false });
+        return res.status(500).json({ error: error.message })
+        // return next(new ErrorHandler(error.message, 500))
+    }
+}
