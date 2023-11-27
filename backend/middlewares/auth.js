@@ -2,15 +2,26 @@ const User = require('../models/user')
 const jwt = require("jsonwebtoken")
 
 exports.isAuthenticatedUser = async (req, res, next) => {
-    // console.log(req.header)
-    const token  = req.header('Authorization').split(' ')[1];
-    //  console.log(token)
-    if (!token) {
-        return res.status(401).json({message:'Login first to access this resource'})
+     // Check if 'Authorization' header exists
+    const authorizationHeader = req.header('Authorization');
+    if (!authorizationHeader) {
+        return res.status(401).json({ message: 'Login first to access this resource' });
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    req.user = await User.findById(decoded.id);
-    next()
+
+    // Split the header value and get the token
+    const token = authorizationHeader.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ message: 'Login first to access this resource' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = await User.findById(decoded.id);
+        next();
+    } catch (error) {
+        return res.status(401).json({ message: 'Invalid token, please login again' });
+    }
 };
 
 exports.authorizeRoles = (...roles) => {
@@ -24,3 +35,26 @@ exports.authorizeRoles = (...roles) => {
         next()
     }
 }
+
+// exports.isAuthenticatedArtist = async (req, res, next) => {
+//     // Check if 'Authorization' header exists
+//     const authorizationHeader = req.header('Authorization');
+//     if (!authorizationHeader) {
+//         return res.status(401).json({ message: 'Login first to access this resource' });
+//     }
+
+//     // Split the header value and get the token
+//     const token = authorizationHeader.split(' ')[1];
+
+//     if (!token) {
+//         return res.status(401).json({ message: 'Login first to access this resource' });
+//     }
+
+//     try {
+//         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//         req.user = await User.findById(decoded.id);
+//         next();
+//     } catch (error) {
+//         return res.status(401).json({ message: 'Invalid token, please login again' });
+//     }
+// };

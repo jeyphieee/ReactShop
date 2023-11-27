@@ -71,3 +71,18 @@ exports.getsingleArtist = async (req, res) => {
         throw new Error(error);
     }
 };
+
+
+exports.updateArtist = async (req, res) => {
+    const { id } = req.params;
+    try {
+        if (req.body.name) {
+            req.body.slug = slugify(req.body.name);
+        }
+        const updateartist = await artist.findByIdAndUpdate(id , req.body, {new: true});
+        res.json(updateartist);
+    }
+    catch (error) {
+        throw new Error(error);
+    }
+};
