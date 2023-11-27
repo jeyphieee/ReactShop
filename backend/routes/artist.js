@@ -7,4 +7,5 @@ const { createArtist, deleteArtist, getsingleArtist, getAllArtists, updateArtist
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth');
 
 router.post('/artist/admin/new', isAuthenticatedUser, createArtist);
+router.get('/artist/admin/getAll', getAllArtists);
 module.exports = router;
