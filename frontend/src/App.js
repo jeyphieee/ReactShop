@@ -20,6 +20,7 @@ import ListOrders from "./Components/Order/ListOrders";
 import OrderDetails from "./Components/Order/OrderDetails";
 import Dashboard from "./Components/Admin/Dashboard";
 import ProductsList from "./Components/Admin/ProductsList";
+import Artist from './Components/Admin/ArtistList';
 import NewProduct from "./Components/Admin/NewProduct";
 import UpdateProduct from "./Components/Admin/UpdateProduct";
 import { toast, ToastContainer } from 'react-toastify';
@@ -164,6 +165,14 @@ function App() {
             element={
               <ProtectedRoute isAdmin={true}>
                 <ProductsList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/artists"
+            element={
+              <ProtectedRoute isAdmin={true}>
+                <Artist />
               </ProtectedRoute>
             }
           />
