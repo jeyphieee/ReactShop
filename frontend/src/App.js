@@ -26,6 +26,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import OrdersList from "./Components/Admin/OrdersList";
+import NewArtist from "./Components/Admin/NewArtist";
 import ProcessOrder from "./Components/Admin/ProcessOrder"
 import UsersList from "./Components/Admin/UsersList";
 import UpdateUser from "./Components/Admin/UpdateUser";
@@ -135,6 +136,7 @@ function App() {
           {/* <Route path="/dashboard" element={<Dashboard />} /> */}
           {/* <Route path="/admin/products" element={<ProductsList />} /> */}
           <Route path="/admin/product" element={<NewProduct />} />
+          <Route path="/admin/artist" element={<NewArtist />} />
           <Route
             path="/admin/product/:id"
             element={<UpdateProduct />} />
