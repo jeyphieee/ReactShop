@@ -36,6 +36,7 @@ import { Provider } from "react-redux";
 import authSlice from './user/userSlice'
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from './user/userSlice';
+import Receipt from './Components/Cart/Receipt';
 const store = configureStore({
   reducer: rootReducer, 
 });
@@ -133,6 +134,7 @@ function App() {
           <Route path="/success" element={<OrderSuccess />} />
           <Route path="/orders/me" element={<ListOrders />} />
           <Route path="/order/:id" element={<OrderDetails />} />
+          <Route path="/print-receipt/:id" element={<OrderDetails />} />
           {/* <Route path="/dashboard" element={<Dashboard />} /> */}
           {/* <Route path="/admin/products" element={<ProductsList />} /> */}
           <Route path="/admin/product" element={<NewProduct />} />

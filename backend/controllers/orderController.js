@@ -357,7 +357,8 @@ exports.OrderSuccess = async (req, res, next) => {
             message: `Email sent to: ${user.email}`
         })
 
-    } catch (error) {
+    } 
+    catch (error) {
         user.resetPasswordToken = undefined;
         user.resetPasswordExpire = undefined;
         await user.save({ validateBeforeSave: false });
