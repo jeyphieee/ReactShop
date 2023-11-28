@@ -25,6 +25,20 @@ const Sidebar = () => {
                     </li>
 
                     <li>
+                        <a href="#artistSubmenu" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle"><i
+                            className="fa fa-product-hunt"></i> Artist</a>
+                        <ul className="collapse list-unstyled" id="artistSubmenu">
+                            {/* <li>
+                                <Link to="/admin/"><i className="fa fa-clipboard"></i> All</Link>
+                            </li> */}
+
+                            <li>
+                                <Link to="/admin/artist"><i className="fa fa-plus"></i> Create</Link>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
                         <Link to="/admin/orders"><i className="fa fa-shopping-basket"></i> Orders</Link>
                     </li>
 
