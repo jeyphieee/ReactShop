@@ -1,5 +1,7 @@
 const Order = require('../models/order');
 const Product = require('../models/product');
+const User = require('../models/user');
+const sendEmail = require('../utils/sendEmail');
 
 exports.newOrder = async (req, res, next) => {
     const {
@@ -10,7 +12,6 @@ exports.newOrder = async (req, res, next) => {
         shippingPrice,
         totalPrice,
         paymentInfo
-
     } = req.body;
 
     const order = await Order.create({
@@ -23,17 +24,44 @@ exports.newOrder = async (req, res, next) => {
         paymentInfo,
         paidAt: Date.now(),
         user: req.user._id
-    })
+    });
 
     if (!order) {
-        return res.status(400).json({ message: `Order not saved` })
+        return res.status(400).json({ message: `Order not saved` });
+    }
+
+    const orderId = order._id;
+    const order1 = await Order.findById(orderId).populate('user');
+    
+    if (!order1) {
+        return res.status(400).json({ message: `Order not found` });
+    }
+
+    const user = order1.user;
+
+    if (user) {
+        const pdfLink = `${req.protocol}://localhost:3000/print-receipt/${orderId}`;
+        let message = '';
+
+        if (order1.orderStatus === 'Processing') {
+            message = `Your order with ID ${orderId} has been processed successfully.
+            You will receive a confirmation email shortly once your order has been confirmed. 
+            Thank you for shopping with us, Happy Collecting! <a href="${pdfLink}">Print Receipt</a>`;
+
+            await sendEmail({
+                email: user.email,
+                subject: 'Order Processed',
+                message
+            });
+        }
     }
 
     res.status(200).json({
         success: true,
         order
-    })
-}
+    });
+};
+
 
 exports.getSingleOrder = async (req, res, next) => {
     const order = await Order.findById(req.params.id).populate('user', 'name email')
@@ -56,8 +84,11 @@ exports.myOrders = async (req, res, next) => {
 
     res.status(200).json({
         success: true,
-        orders
+        orders,
+
     })
+
+
 }
 
 exports.allOrders = async (req, res, next) => {
@@ -76,7 +107,8 @@ exports.allOrders = async (req, res, next) => {
     })
 }
 exports.updateOrder = async (req, res, next) => {
-    const order = await Order.findById(req.params.id)
+    const orderId = req.params.id;
+    const order = await Order.findById(orderId);
 
     if (order.orderStatus === 'Delivered') {
         return res.status(404).json({ message: `You have already delivered this order` })
@@ -90,9 +122,36 @@ exports.updateOrder = async (req, res, next) => {
     order.deliveredAt = Date.now()
     await order.save()
 
+    const user = await User.findById(order.user);
+
+    if (user){
+        const pdfLink = `${req.protocol}://localhost:3000/print-receipt/${order}`;
+        let message = '';
+
+         if (order.orderStatus === 'Shipped'){
+            message = `Your order with ID ${orderId} has been shipped. Please allow 2-3 
+            business days for shipment and delivery. Thank you for shopping with us, Happy Collecting!
+            <a href="${pdfLink}">Print Receipt</a>`;
+            await sendEmail({
+                email: user.email,
+                subject: 'Order Shipped',
+                message
+            })
+        } else if (order.orderStatus === 'Delivered'){
+            message = `Your order with ID ${orderId} has been delivered. We hope your package arrived in 
+            perfect condition and that you're delighted with your purchase. Your satisfaction is our priority.
+            Thank you for shopping with us, Happy Collecting!
+            <a href="${pdfLink}">Print Receipt</a>`;
+            await sendEmail({
+                email: user.email,
+                subject: 'Order Delivered',
+                message
+            });
+    }
     res.status(200).json({
         success: true,
     })
+}
 }
 
 async function updateStock(id, quantity) {
@@ -270,4 +329,39 @@ exports.salesPerMonth = async (req, res, next) => {
         salesPerMonth
     })
 
+}
+
+exports.OrderSuccess = async (req, res, next) => {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+        return res.status(404).json({ error: 'User not found with this email' })
+        // return next(new ErrorHandler('User not found with this email', 404));
+    }
+    // Get reset token
+    const message = `Thank you for choosing Collector's Corner for your latest acquisition! We're thrilled to have you join our community of collectors.
+
+    Your purchase details are all set, and your receipt is available for download below:
+        
+    If you have any questions about your purchase or need further assistance, feel free to reach out. We're here to ensure your collecting experience with us is top-notch.
+    
+    Happy collecting!`
+    try {
+        await sendEmail({
+            email: user.email,
+            subject: 'Purchase Confirmation',
+            message
+        })
+
+        res.status(200).json({
+            success: true,
+            message: `Email sent to: ${user.email}`
+        })
+
+    } catch (error) {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        await user.save({ validateBeforeSave: false });
+        return res.status(500).json({ error: error.message })
+        // return next(new ErrorHandler(error.message, 500))
+    }
 }
