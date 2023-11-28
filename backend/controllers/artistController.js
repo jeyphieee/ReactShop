@@ -19,7 +19,7 @@ exports.createArtist = async (req, res) => {
 
 exports.getAllArtists = async (req, res, next) => {
 	// const products = await Product.find({});
-	const resPerPage = 4;
+	const resPerPage = 10;
 	const artistCount = await artist.countDocuments();
 	const apiFeatures = new APIFeatures(artist.find(), req.query).search().filter()
 	apiFeatures.pagination(resPerPage);
@@ -28,7 +28,7 @@ exports.getAllArtists = async (req, res, next) => {
 	if (!artists) {
 		return res.status(404).json({
 			success: false,
-			message: 'No Products'
+			message: 'No Artists'
 		})
 	}
 	res.status(200).json({
