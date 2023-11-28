@@ -1,31 +1,9 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Metadata from '../Layout/MetaData'
+import MetaData from '../Layout/MetaData'
 import axios from 'axios'
-import { useFormik } from "formik";
-import * as yup from 'yup';
-import { registerUser } from '../../user/userSlice';
-import {useDispatch} from 'react-redux';
 
-const registerSchema = yup.object({
-    name: yup.string().required("Name is required"),
-    email: yup.string().nullable().email("Email should be valid"),
-    password: yup.string().required("Password is required"),
-  });
 const Register = () => {
-    const dispatch = useDispatch();
-    const formik = useFormik({
-        initialValues: {
-            name: '',
-            email: '',
-            mobile: '',
-            password: '',
-          },
-        validationSchema: registerSchema,
-        onSubmit: (values) => {
-        dispatch(registerUser(values));
-        },
-      });
 
     const [user, setUser] = useState({
         name: '',
@@ -108,10 +86,10 @@ const Register = () => {
 
     return (
         <Fragment>
-            <Metadata title={'Register User'} />
+            <MetaData title={'Register User'} />
             <div className="row wrapper">
                 <div className="col-10 col-lg-5">
-                    <form className="shadow-lg" onSubmit={formik.handleSubmit} encType='multipart/form-data'>
+                    <form className="shadow-lg" onSubmit={submitHandler} encType='multipart/form-data'>
                         <h1 className="mb-3">Register</h1>
 
                         <div className="form-group">
@@ -121,15 +99,9 @@ const Register = () => {
                                 id="name_field"
                                 className="form-control"
                                 name='name'
-                                value={formik.values.name}
-                                onChange={formik.handleChange("name")} 
-                                onBlur={formik.handleBlur("name")} 
+                                value={name}
+                                onChange={onChange}
                             />
-                            <div className="error">
-                                {
-                                    formik.touched.name && formik.errors.name
-                                }
-                                </div>
                         </div>
 
                         <div className="form-group">
@@ -139,17 +111,10 @@ const Register = () => {
                                 id="email_field"
                                 className="form-control"
                                 name='email'
-                                value={formik.values.email}
-                                onChange={formik.handleChange("email")} 
-                                onBlur={formik.handleBlur("email")} 
+                                value={email}
+                                onChange={onChange}
                             />
-                            <div className="error">
-                                {
-                                    formik.touched.email && formik.errors.email
-                                }
-                                </div>
                         </div>
-                    
 
                         <div className="form-group">
                             <label htmlFor="password_field">Password</label>
@@ -158,15 +123,9 @@ const Register = () => {
                                 id="password_field"
                                 className="form-control"
                                 name='password'
-                                value={formik.values.password}
-                                onChange={formik.handleChange("password")} 
-                                onBlur={formik.handleBlur("password")} 
+                                value={password}
+                                onChange={onChange}
                             />
-                            <div className="error">
-                                {
-                                    formik.touched.password && formik.errors.password
-                                }
-                                </div>
                         </div>
 
                         <div className='form-group'>
